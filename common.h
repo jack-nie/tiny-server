@@ -1,7 +1,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/socket.h>
+#include <sys/mman.h>
 #include <netinet/in.h>
+#include <netdb.h>
+#include <arpa/inet.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
@@ -10,8 +13,9 @@
 #include <unistd.h>
 #include <pthread.h>
 
+extern char **environ;
 #define	MAXLINE	 8192  /* max text line length */
-#define MAXLEN 1024
+#define MAXBUF 8192
 #define RIO_BUFSIZE 8192
 #define LISTENQ 1024
 
@@ -40,5 +44,13 @@ ssize_t rio_readlineb(rio_t *rp, void *usrbuf, size_t maxlen);
 /* Client/server helper functions */
 int open_clientfd(char *hostname, int portno);
 int open_listenfd(int portno);
-void echo(int connfd);
 void command(void);
+
+/* server handle functions */
+void read_requesthdrs(rio_t *rp);
+int parse_uri(char *uri, char *filename, char *cgiargs);
+void serve_static(int fd, char *filename, int filesize);
+void get_filetype(char *filename, char *file_type);
+void serve_dynamic(int fd, char *filename, char *cgiargs);
+void clienterror(int fd, char *cause, char *errnum, char *shortmsg, char *longmsg);
+void doit(int fd);
