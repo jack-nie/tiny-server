@@ -6,7 +6,7 @@ This is a repo for learning stuff from csapp.
 
 ```
 gcc rio.c common.c server.c -o server
-./server
+./server 8080
 ```
 
 enjoy!
