@@ -44,10 +44,10 @@ ssize_t rio_writen(int fd, void *usrbuf, size_t n)
   return n;
 }
 
-ssize_t rio_read(rio_t *rp, void *usrbuf, size_t n)
+static ssize_t rio_read(rio_t *rp, void *usrbuf, size_t n)
 {
   int cnt;
-  while(rp->rio_cnt > 0)
+  while(rp->rio_cnt <= 0)
   {
     rp->rio_cnt = read(rp->rio_fd, rp->rio_buf, sizeof(rp->rio_buf));
     if (rp->rio_cnt < 0)
